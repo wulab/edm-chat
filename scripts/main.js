@@ -49,7 +49,8 @@ function FriendlyChat(postalCode) {
   this.messageInput.addEventListener('change', buttonTogglingHandler);
 
   // Events for image upload.
-  this.submitImageButton.addEventListener('click', function() {
+  this.submitImageButton.addEventListener('click', function(e) {
+    e.preventDefault();
     this.mediaCapture.click();
   }.bind(this));
   this.mediaCapture.addEventListener('change', this.saveImageMessage.bind(this));
