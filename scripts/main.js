@@ -71,7 +71,7 @@ FriendlyChat.prototype.initFirebase = function() {
 // Loads chat messages history and listens for upcoming ones.
 FriendlyChat.prototype.loadMessages = function() {
   // Reference to the /messages/ database path.
-  this.messagesRef = this.database.ref('messages');
+  this.messagesRef = this.database.ref('messages').orderByChild('postalCode').equalTo(this.postalCode);
   // Make sure we remove all previous listeners.
   this.messagesRef.off();
 
