@@ -76,7 +76,7 @@ FriendlyChat.prototype.loadMessages = function() {
   var setMessage = function(data) {
     var val = data.val();
     this.displayMessage(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
-    this.displayEvent(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
+    this.displayEvent(data.key, val.name, val.text, val.photoUrl, val.imageUrl, val.time);
   }.bind(this);
   this.messagesRef.limitToLast(12).on('child_added', setMessage);
   this.messagesRef.limitToLast(12).on('child_changed', setMessage);
@@ -92,7 +92,8 @@ FriendlyChat.prototype.saveMessage = function(e) {
     this.messagesRef.push({
       name: currentUser.displayName,
       text: this.messageInput.value,
-      photoUrl: currentUser.photoURL || '/images/profile_placeholder.png'
+      photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
+      postalCode: '10400'
     }).then(function() {
       // Clear message text field and SEND button state.
       FriendlyChat.resetMaterialTextfield(this.messageInput);
@@ -141,7 +142,9 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
     this.messagesRef.push({
       name: currentUser.displayName,
       imageUrl: FriendlyChat.LOADING_IMAGE_URL,
-      photoUrl: currentUser.photoURL || '/images/profile_placeholder.png'
+      photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
+      time: + new Date(),
+      postalCode: '10400'
     }).then(function(data) {
 
       // Upload the image to Firebase Storage.
@@ -238,6 +241,7 @@ FriendlyChat.MESSAGE_TEMPLATE =
           '<div class="spacing"><div class="pic"></div></div>' +
           '<div class="message"></div>' +
           '<div class="name"></div>' +
+          '<div class="date-time"></div>'
         '</div>';
 
 // A loading image URL.
@@ -279,12 +283,12 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
 };
 
 // Displays a Event in the UI.
-FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri) {
+FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri, time) {
   var div = document.getElementById(key);
   // If an element for that message does not exists yet we create it.
   if (imageUri) {
     var container = document.createElement('div');
-    container.innerHTML = FriendlyChat.MESSAGE_TEMPLATE;
+    container.innerHTML = FriendlyChat.EVENT_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
     this.eventList.appendChild(div);
@@ -307,6 +311,7 @@ FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri
     this.setImageUrl(imageUri, image);
     messageElement.innerHTML = '';
     messageElement.appendChild(image);
+    div.querySelector('.date-time').textContent = time;
   }
   // Show the card fading-in.
   setTimeout(function() {div.classList.add('visible')}, 1);
