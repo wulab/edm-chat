@@ -15,8 +15,8 @@
  */
 'use strict';
 
-// Initializes FriendlyChat.
-function FriendlyChat(postalCode) {
+// Initializes EDMChat.
+function EDMChat(postalCode) {
   this.checkSetup();
 
   // Set message scope.
@@ -60,7 +60,7 @@ function FriendlyChat(postalCode) {
 }
 
 // Sets up shortcuts to Firebase features and initiate firebase auth.
-FriendlyChat.prototype.initFirebase = function() {
+EDMChat.prototype.initFirebase = function() {
   // Shortcuts to Firebase SDK features.
   this.auth = firebase.auth();
   this.database = firebase.database();
@@ -71,7 +71,7 @@ FriendlyChat.prototype.initFirebase = function() {
 };
 
 // Loads chat messages history and listens for upcoming ones.
-FriendlyChat.prototype.loadMessages = function() {
+EDMChat.prototype.loadMessages = function() {
   // Reference to the /messages/ database path.
   this.messagesRef = this.database.ref('messages');
   // Make sure we remove all previous listeners.
@@ -91,7 +91,7 @@ FriendlyChat.prototype.loadMessages = function() {
 };
 
 // Saves a new message on the Firebase DB.
-FriendlyChat.prototype.saveMessage = function(e) {
+EDMChat.prototype.saveMessage = function(e) {
   e.preventDefault();
   // Check that the user entered a message and is signed in.
   if (this.messageInput.value && this.checkSignedInWithMessage()) {
@@ -104,7 +104,7 @@ FriendlyChat.prototype.saveMessage = function(e) {
       postalCode: this.postalCode
     }).then(function() {
       // Clear message text field and SEND button state.
-      FriendlyChat.resetMaterialTextfield(this.messageInput);
+      EDMChat.resetMaterialTextfield(this.messageInput);
       this.toggleButton();
     }.bind(this)).catch(function(error) {
       console.error('Error writing new message to Firebase Database', error);
@@ -113,10 +113,10 @@ FriendlyChat.prototype.saveMessage = function(e) {
 };
 
 // Sets the URL of the given img element with the URL of the image stored in Firebase Storage.
-FriendlyChat.prototype.setImageUrl = function(imageUri, imgElement) {
+EDMChat.prototype.setImageUrl = function(imageUri, imgElement) {
   // If the image is a Firebase Storage URI we fetch the URL.
   if (imageUri.startsWith('gs://')) {
-    imgElement.src = FriendlyChat.LOADING_IMAGE_URL; // Display a loading image first.
+    imgElement.src = EDMChat.LOADING_IMAGE_URL; // Display a loading image first.
     this.storage.refFromURL(imageUri).getMetadata().then(function(metadata) {
       imgElement.src = metadata.downloadURLs[0];
     });
@@ -127,7 +127,7 @@ FriendlyChat.prototype.setImageUrl = function(imageUri, imgElement) {
 
 // Saves a new message containing an image URI in Firebase.
 // This first saves the image in Firebase storage.
-FriendlyChat.prototype.saveImageMessage = function(event) {
+EDMChat.prototype.saveImageMessage = function(event) {
   var file = event.target.files[0];
 
   // Clear the selection in the file picker input.
@@ -149,7 +149,7 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
     var currentUser = this.auth.currentUser;
     this.messagesRef.push({
       name: currentUser.displayName,
-      imageUrl: FriendlyChat.LOADING_IMAGE_URL,
+      imageUrl: EDMChat.LOADING_IMAGE_URL,
       photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
       text: this.messageInput.value,
       time: + new Date(),
@@ -170,21 +170,21 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
   }
 };
 
-// Signs-in Friendly Chat.
-FriendlyChat.prototype.signIn = function() {
+// Signs-in EDM Chat.
+EDMChat.prototype.signIn = function() {
   // Sign in Firebase using popup auth and Google as the identity provider.
   var provider = new firebase.auth.GoogleAuthProvider();
   this.auth.signInWithPopup(provider);
 };
 
-// Signs-out of Friendly Chat.
-FriendlyChat.prototype.signOut = function() {
+// Signs-out of EDM Chat.
+EDMChat.prototype.signOut = function() {
   // Sign out of Firebase.
   this.auth.signOut();
 };
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-FriendlyChat.prototype.onAuthStateChanged = function(user) {
+EDMChat.prototype.onAuthStateChanged = function(user) {
   if (user) { // User is signed in!
     // Get profile pic and user's name from the Firebase user object.
     var profilePicUrl = user.photoURL;
@@ -219,7 +219,7 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
 };
 
 // Returns true if user is signed-in. Otherwise false and displays a message.
-FriendlyChat.prototype.checkSignedInWithMessage = function() {
+EDMChat.prototype.checkSignedInWithMessage = function() {
   // Return true if the user is signed in Firebase
   if (this.auth.currentUser) {
     return true;
@@ -235,13 +235,13 @@ FriendlyChat.prototype.checkSignedInWithMessage = function() {
 };
 
 // Resets the given MaterialTextField.
-FriendlyChat.resetMaterialTextfield = function(element) {
+EDMChat.resetMaterialTextfield = function(element) {
   element.value = '';
   element.parentNode.MaterialTextfield.boundUpdateClassesHandler();
 };
 
 // Template for messages.
-FriendlyChat.MESSAGE_TEMPLATE =
+EDMChat.MESSAGE_TEMPLATE =
     '<div class="message-container">' +
       '<div class="spacing"><div class="pic"></div></div>' +
       '<div class="message"></div>' +
@@ -249,7 +249,7 @@ FriendlyChat.MESSAGE_TEMPLATE =
       '<div class="name"></div>' +
     '</div>';
 
-FriendlyChat.EVENT_TEMPLATE =
+EDMChat.EVENT_TEMPLATE =
 '<a class="gallery-item" href="#">' +
   '<div class="image"></div>' +
   '<span class="text-wrapper"></span>' +
@@ -257,7 +257,7 @@ FriendlyChat.EVENT_TEMPLATE =
   '<div class="name"></div>' +
 '</a>'
 
-FriendlyChat.CONTACT_TEMPLATE =
+EDMChat.CONTACT_TEMPLATE =
 '<li class="mdl-list__item mdl-list__item--three-line">' +
   '<span class="mdl-list__item-primary-content">' +
     '<i class="material-icons mdl-list__item-avatar">person</i>' +
@@ -271,15 +271,15 @@ FriendlyChat.CONTACT_TEMPLATE =
 '</li>'
 
 // A loading image URL.
-FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
+EDMChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
 
 // Displays a Message in the UI.
-FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageUri) {
+EDMChat.prototype.displayMessage = function(key, name, text, picUrl, imageUri) {
   var div = document.getElementById(key);
   // If an element for that message does not exists yet we create it.
   if (!div) {
     var container = document.createElement('div');
-    container.innerHTML = FriendlyChat.MESSAGE_TEMPLATE;
+    container.innerHTML = EDMChat.MESSAGE_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
     this.messageList.appendChild(div);
@@ -310,12 +310,12 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
 };
 
 // Displays a Event in the UI.
-FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri, time) {
+EDMChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri, time) {
   var div = document.getElementById(key);
   // If an element for that message does not exists yet we create it.
   if (imageUri) {
     var container = document.createElement('div');
-    container.innerHTML = FriendlyChat.EVENT_TEMPLATE;
+    container.innerHTML = EDMChat.EVENT_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
     this.eventList.appendChild(div);
@@ -339,7 +339,7 @@ FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri
 };
 
 // Loads emergency contacts.
-FriendlyChat.prototype.loadContacts = function() {
+EDMChat.prototype.loadContacts = function() {
   // Reference to the /contacts/ database path.
   this.contactsRef = this.database.ref('contacts');
   // Make sure we remove all previous listeners.
@@ -359,7 +359,7 @@ FriendlyChat.prototype.loadContacts = function() {
 };
 
 // Displays a Contact in the UI.
-FriendlyChat.prototype.displayContact = function(key, name, address, phone) {
+EDMChat.prototype.displayContact = function(key, name, address, phone) {
   var div = document.getElementById(key);
 
   if (!div) {
@@ -376,7 +376,7 @@ FriendlyChat.prototype.displayContact = function(key, name, address, phone) {
 
 // Enables or disables the submit button depending on the values of the input
 // fields.
-FriendlyChat.prototype.toggleButton = function() {
+EDMChat.prototype.toggleButton = function() {
   if (this.messageInput.value) {
     this.submitButton.removeAttribute('disabled');
   } else {
@@ -385,7 +385,7 @@ FriendlyChat.prototype.toggleButton = function() {
 };
 
 // Checks that the Firebase SDK has been correctly setup and configured.
-FriendlyChat.prototype.checkSetup = function() {
+EDMChat.prototype.checkSetup = function() {
   if (!window.firebase || !(firebase.app instanceof Function) || !window.config) {
     window.alert('You have not configured and imported the Firebase SDK. ' +
         'Make sure you go through the codelab setup instructions.');
@@ -404,7 +404,7 @@ window.onload = function() {
 
   if ( regex.test(location.search) ) {
     var postalCode = location.search.match(regex)[1];
-    window.friendlyChat = new FriendlyChat(postalCode);
+    window.edmChat = new EDMChat(postalCode);
   } else {
     window.alert('Can\'t get postal code from URL.');
     location.href = '/?p=00000';
