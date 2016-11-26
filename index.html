@@ -108,9 +108,18 @@
 </div>
 
 <!-- Firebase -->
-<!-- ***********************************************************************************************************************
-     * TODO(DEVELOPER): Paste the initialization snippet from: Firebase Console > Overview > Add Firebase to your web app. *
-     *********************************************************************************************************************** -->
+<script src="https://www.gstatic.com/firebasejs/3.6.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDt9P1yrOOt5IDsNuubyuU_OTPPBe6cGpI",
+    authDomain: "edm-chat.firebaseapp.com",
+    databaseURL: "https://edm-chat.firebaseio.com",
+    storageBucket: "edm-chat.appspot.com",
+    messagingSenderId: "95492685875"
+  };
+  firebase.initializeApp(config);
+</script>
 <script src="scripts/main.js"></script>
 </body>
 </html>
