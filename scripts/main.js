@@ -354,8 +354,8 @@ EDMChat.prototype.loadContacts = function() {
   // Scopes contacts by postalCode.
   var provinceCode = this.postalCode.substring(0, 2);
   var contactsByPostalCode = this.contactsRef.orderByChild('postalCode').startAt(provinceCode).endAt(provinceCode + '999');
-  contactsByPostalCode.limitToLast(12).on('child_added', setContact);
-  contactsByPostalCode.limitToLast(12).on('child_changed', setContact);
+  contactsByPostalCode.limitToLast(30).on('child_added', setContact);
+  contactsByPostalCode.limitToLast(30).on('child_changed', setContact);
 };
 
 // Displays a Contact in the UI.
