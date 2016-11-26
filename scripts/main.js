@@ -348,11 +348,12 @@ FriendlyChat.prototype.checkSetup = function() {
 
 window.onload = function() {
   var regex = /p=(\d{5})/;
+
   if ( regex.test(location.search) ) {
     var postalCode = location.search.match(regex)[1];
     window.friendlyChat = new FriendlyChat(postalCode);
   } else {
     window.alert('Can\'t get postal code from URL.');
-    location.href = 'http://www.edmalert.me/';
+    location.href = '/?p=00000';
   }
 };
