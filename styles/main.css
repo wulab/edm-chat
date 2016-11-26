@@ -256,3 +256,7 @@ main, #messages-card {
     margin-bottom: 1em;
   }
 }
+
+span.mdl-list__item-secondary-content > a {
+  color: rgba(0,0,0,.54);
+}

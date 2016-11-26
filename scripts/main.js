@@ -37,6 +37,7 @@ function FriendlyChat(postalCode) {
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
 
   this.eventList = document.getElementById('events');
+  this.contactList = document.getElementById('contacts');
 
   // Saves message on form submit.
   this.messageForm.addEventListener('submit', this.saveMessage.bind(this));
@@ -248,13 +249,26 @@ FriendlyChat.MESSAGE_TEMPLATE =
       '<div class="name"></div>' +
     '</div>';
 
-    FriendlyChat.EVENT_TEMPLATE =
-    '<a class="gallery-item" href="#">' +
-      '<div class="image"></div>' +
-      '<span class="text-wrapper"></span>' +
-      '<div class="spacing"><div class="pic"></div></div>' +
-      '<div class="name"></div>' +
-    '</a>'
+FriendlyChat.EVENT_TEMPLATE =
+'<a class="gallery-item" href="#">' +
+  '<div class="image"></div>' +
+  '<span class="text-wrapper"></span>' +
+  '<div class="spacing"><div class="pic"></div></div>' +
+  '<div class="name"></div>' +
+'</a>'
+
+FriendlyChat.CONTACT_TEMPLATE =
+'<li class="mdl-list__item mdl-list__item--three-line">' +
+  '<span class="mdl-list__item-primary-content">' +
+    '<i class="material-icons mdl-list__item-avatar">person</i>' +
+    '<span class="name"></span>' +
+    '<br/>โทรศัพท์: <span class="tel"></span>' +
+    '<span class="mdl-list__item-text-body address"></span>' +
+  '</span>' +
+  '<span class="mdl-list__item-secondary-content">' +
+    '<a class="mdl-list__item-secondary-action" href="#"><i class="material-icons">local_hospital</i></a>' +
+  '</span>' +
+'</li>'
 
 // A loading image URL.
 FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
@@ -346,7 +360,18 @@ FriendlyChat.prototype.loadContacts = function() {
 
 // Displays a Contact in the UI.
 FriendlyChat.prototype.displayContact = function(key, name, address, phone) {
-  // TODO
+  var div = document.getElementById(key);
+
+  if (!div) {
+    var container = document.createElement('div');
+    container.innerHTML = FriendlyChat.CONTACT_TEMPLATE;
+    div = container.firstChild;
+    div.setAttribute('id', key);
+    this.contactList.appendChild(div);
+  }
+  div.querySelector('.name').textContent = name;
+  div.querySelector('.address').textContent = address;
+  div.querySelector('.tel').textContent = phone;
 };
 
 // Enables or disables the submit button depending on the values of the input
