@@ -202,6 +202,9 @@ FriendlyChat.prototype.onAuthStateChanged = function(user) {
 
     // We load currently existing chant messages.
     this.loadMessages();
+
+    // Load emergency contacts.
+    this.loadContacts();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     this.userName.setAttribute('hidden', 'true');
@@ -318,6 +321,31 @@ FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri
   // Show the card fading-in.
   setTimeout(function() {div.classList.add('visible')}, 1);
   this.eventList.scrollTop = this.eventList.scrollHeight;
+};
+
+// Loads emergency contacts.
+FriendlyChat.prototype.loadContacts = function() {
+  // Reference to the /contacts/ database path.
+  this.contactsRef = this.database.ref('contacts');
+  // Make sure we remove all previous listeners.
+  this.contactsRef.off();
+
+  // Loads the last 12 contacts and listen for new ones.
+  var setContact = function(data) {
+    var val = data.val();
+    this.displayContact(data.key, val.name, val.address, val.phone);
+  }.bind(this);
+
+  // Scopes contacts by postalCode.
+  var provinceCode = this.postalCode.substring(0, 2);
+  var contactsByPostalCode = this.contactsRef.orderByChild('postalCode').startAt(provinceCode).endAt(provinceCode + '999');
+  contactsByPostalCode.limitToLast(12).on('child_added', setContact);
+  contactsByPostalCode.limitToLast(12).on('child_changed', setContact);
+};
+
+// Displays a Contact in the UI.
+FriendlyChat.prototype.displayContact = function(key, name, address, phone) {
+  // TODO
 };
 
 // Enables or disables the submit button depending on the values of the input
