@@ -71,7 +71,7 @@ FriendlyChat.prototype.initFirebase = function() {
 // Loads chat messages history and listens for upcoming ones.
 FriendlyChat.prototype.loadMessages = function() {
   // Reference to the /messages/ database path.
-  this.messagesRef = this.database.ref('messages').orderByChild('postalCode').equalTo(this.postalCode);
+  this.messagesRef = this.database.ref('messages');
   // Make sure we remove all previous listeners.
   this.messagesRef.off();
 
@@ -81,8 +81,11 @@ FriendlyChat.prototype.loadMessages = function() {
     this.displayMessage(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
     this.displayEvent(data.key, val.name, val.text, val.photoUrl, val.imageUrl, val.time);
   }.bind(this);
-  this.messagesRef.limitToLast(12).on('child_added', setMessage);
-  this.messagesRef.limitToLast(12).on('child_changed', setMessage);
+
+  // Scopes messages by postalCode.
+  var messagesByPostalCode = this.messagesRef.orderByChild('postalCode').equalTo(this.postalCode);
+  messagesByPostalCode.limitToLast(12).on('child_added', setMessage);
+  messagesByPostalCode.limitToLast(12).on('child_changed', setMessage);
 };
 
 // Saves a new message on the Firebase DB.
