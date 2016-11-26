@@ -215,3 +215,44 @@ main, #messages-card {
   bottom: auto;
   top: 0;
 }
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+}
+.gallery-item {
+  width: 330px;
+  height: 265px;
+  margin: 10px;
+  text-decoration: none;
+}
+.gallery-item img {
+  position: absolute;
+  width: 100%;
+  max-width: 330px;
+  max-height: 265px;
+}
+.text-wrapper {
+  position: relative;
+  width: 330px;
+  height: 265px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+}
+.text-wrapper:hover {
+  transition: all 0.8s ease;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+}
+@media only screen and (max-width: 1024px) {
+  .text-wrapper {
+    opacity: 1;
+    justify-content: flex-end;
+    text-shadow: 1px 1px 1px #000;
+    margin-bottom: 1em;
+  }
+}

@@ -149,6 +149,7 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
       name: currentUser.displayName,
       imageUrl: FriendlyChat.LOADING_IMAGE_URL,
       photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
+      text: this.messageInput.value,
       time: + new Date(),
       postalCode: this.postalCode
     }).then(function(data) {
@@ -239,16 +240,17 @@ FriendlyChat.MESSAGE_TEMPLATE =
     '<div class="message-container">' +
       '<div class="spacing"><div class="pic"></div></div>' +
       '<div class="message"></div>' +
+      '<div class="text"></div>' +
       '<div class="name"></div>' +
     '</div>';
 
     FriendlyChat.EVENT_TEMPLATE =
-        '<div class="message-container">' +
-          '<div class="spacing"><div class="pic"></div></div>' +
-          '<div class="message"></div>' +
-          '<div class="name"></div>' +
-          '<div class="date-time"></div>'
-        '</div>';
+    '<a class="gallery-item" href="#">' +
+      '<div class="image"></div>' +
+      '<span class="text-wrapper"></span>' +
+      '<div class="spacing"><div class="pic"></div></div>' +
+      '<div class="name"></div>' +
+    '</a>'
 
 // A loading image URL.
 FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
@@ -269,7 +271,7 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
   }
   div.querySelector('.name').textContent = name;
   var messageElement = div.querySelector('.message');
-  if (text) { // If the message is text.
+  if (text && !imageUri) { // If the message is text.
     messageElement.textContent = text;
     // Replace all line breaks by <br>.
     messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
@@ -278,6 +280,7 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
     image.addEventListener('load', function() {
       this.messageList.scrollTop = this.messageList.scrollHeight;
     }.bind(this));
+    div.querySelector('.text').textContent = text;
     this.setImageUrl(imageUri, image);
     messageElement.innerHTML = '';
     messageElement.appendChild(image);
@@ -303,21 +306,14 @@ FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri
     div.querySelector('.pic').style.backgroundImage = 'url(' + picUrl + ')';
   }
   div.querySelector('.name').textContent = name;
-  var messageElement = div.querySelector('.message');
-  // if (text) { // If the message is text.
-  //   messageElement.textContent = text;
-  //   // Replace all line breaks by <br>.
-  //   messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
-  // } else
+  var messageElement = div.querySelector('.image');
+
   if (imageUri) { // If the message is an image.
     var image = document.createElement('img');
-    image.addEventListener('load', function() {
-      this.eventList.scrollTop = this.eventList.scrollHeight;
-    }.bind(this));
     this.setImageUrl(imageUri, image);
     messageElement.innerHTML = '';
     messageElement.appendChild(image);
-    div.querySelector('.date-time').textContent = time;
+    div.querySelector('.text-wrapper').textContent = text;
   }
   // Show the card fading-in.
   setTimeout(function() {div.classList.add('visible')}, 1);
