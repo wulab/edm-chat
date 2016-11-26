@@ -364,7 +364,7 @@ EDMChat.prototype.displayContact = function(key, name, address, phone) {
 
   if (!div) {
     var container = document.createElement('div');
-    container.innerHTML = FriendlyChat.CONTACT_TEMPLATE;
+    container.innerHTML = EDMChat.CONTACT_TEMPLATE;
     div = container.firstChild;
     div.setAttribute('id', key);
     this.contactList.appendChild(div);
