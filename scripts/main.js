@@ -16,8 +16,11 @@
 'use strict';
 
 // Initializes FriendlyChat.
-function FriendlyChat() {
+function FriendlyChat(postalCode) {
   this.checkSetup();
+
+  // Set message scope.
+  this.postalCode = postalCode;
 
   // Shortcuts to DOM Elements.
   this.messageList = document.getElementById('messages');
@@ -93,7 +96,7 @@ FriendlyChat.prototype.saveMessage = function(e) {
       name: currentUser.displayName,
       text: this.messageInput.value,
       photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
-      postalCode: '10400'
+      postalCode: this.postalCode
     }).then(function() {
       // Clear message text field and SEND button state.
       FriendlyChat.resetMaterialTextfield(this.messageInput);
@@ -144,7 +147,7 @@ FriendlyChat.prototype.saveImageMessage = function(event) {
       imageUrl: FriendlyChat.LOADING_IMAGE_URL,
       photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
       time: + new Date(),
-      postalCode: '10400'
+      postalCode: this.postalCode
     }).then(function(data) {
 
       // Upload the image to Firebase Storage.
@@ -344,5 +347,12 @@ FriendlyChat.prototype.checkSetup = function() {
 };
 
 window.onload = function() {
-  window.friendlyChat = new FriendlyChat();
+  var regex = /p=(\d{5})/;
+  if ( regex.test(location.search) ) {
+    var postalCode = location.search.match(regex)[1];
+    window.friendlyChat = new FriendlyChat(postalCode);
+  } else {
+    window.alert('Can\'t get postal code from URL.');
+    location.href = 'http://www.edmalert.me/';
+  }
 };
