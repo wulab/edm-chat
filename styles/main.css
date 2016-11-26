@@ -198,12 +198,9 @@ main, #messages-card {
   margin-right: 5px;
 }
 
-/**/
-
 .mdl-tabs__panel {
   height: 100vh;
 }
-
 .mdl-tabs__tab-bar {
   position: fixed;
   z-index: 1000;
@@ -211,9 +208,9 @@ main, #messages-card {
   left: 0;
   right: 0;
 }
-
-.mdl-tabs__tab-bar > a.mdl-tabs__tab { width: 33%; }
-
+.mdl-tabs__tab-bar > a.mdl-tabs__tab {
+  width: 33%;
+}
 .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active:after {
   bottom: auto;
   top: 0;
