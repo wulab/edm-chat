@@ -33,6 +33,8 @@ function FriendlyChat() {
   this.signOutButton = document.getElementById('sign-out');
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
 
+  this.eventList = document.getElementById('events');
+
   // Saves message on form submit.
   this.messageForm.addEventListener('submit', this.saveMessage.bind(this));
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
@@ -74,6 +76,7 @@ FriendlyChat.prototype.loadMessages = function() {
   var setMessage = function(data) {
     var val = data.val();
     this.displayMessage(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
+    this.displayEvent(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
   }.bind(this);
   this.messagesRef.limitToLast(12).on('child_added', setMessage);
   this.messagesRef.limitToLast(12).on('child_changed', setMessage);
@@ -230,6 +233,13 @@ FriendlyChat.MESSAGE_TEMPLATE =
       '<div class="name"></div>' +
     '</div>';
 
+    FriendlyChat.EVENT_TEMPLATE =
+        '<div class="message-container">' +
+          '<div class="spacing"><div class="pic"></div></div>' +
+          '<div class="message"></div>' +
+          '<div class="name"></div>' +
+        '</div>';
+
 // A loading image URL.
 FriendlyChat.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
 
@@ -266,6 +276,41 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
   setTimeout(function() {div.classList.add('visible')}, 1);
   this.messageList.scrollTop = this.messageList.scrollHeight;
   this.messageInput.focus();
+};
+
+// Displays a Event in the UI.
+FriendlyChat.prototype.displayEvent = function(key, name, text, picUrl, imageUri) {
+  var div = document.getElementById(key);
+  // If an element for that message does not exists yet we create it.
+  if (imageUri) {
+    var container = document.createElement('div');
+    container.innerHTML = FriendlyChat.MESSAGE_TEMPLATE;
+    div = container.firstChild;
+    div.setAttribute('id', key);
+    this.eventList.appendChild(div);
+  }
+  if (picUrl) {
+    div.querySelector('.pic').style.backgroundImage = 'url(' + picUrl + ')';
+  }
+  div.querySelector('.name').textContent = name;
+  var messageElement = div.querySelector('.message');
+  // if (text) { // If the message is text.
+  //   messageElement.textContent = text;
+  //   // Replace all line breaks by <br>.
+  //   messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
+  // } else
+  if (imageUri) { // If the message is an image.
+    var image = document.createElement('img');
+    image.addEventListener('load', function() {
+      this.eventList.scrollTop = this.eventList.scrollHeight;
+    }.bind(this));
+    this.setImageUrl(imageUri, image);
+    messageElement.innerHTML = '';
+    messageElement.appendChild(image);
+  }
+  // Show the card fading-in.
+  setTimeout(function() {div.classList.add('visible')}, 1);
+  this.eventList.scrollTop = this.eventList.scrollHeight;
 };
 
 // Enables or disables the submit button depending on the values of the input
