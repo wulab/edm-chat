@@ -65,9 +65,28 @@ EDMChat.prototype.initFirebase = function() {
   this.auth = firebase.auth();
   this.database = firebase.database();
   this.storage = firebase.storage();
+  this.messaging = firebase.messaging();
 
   // Initiates Firebase auth and listen to auth state changes.
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+
+  // Gets permission required for cloud messaging.
+  this.messaging.requestPermission()
+  .then(function() {
+    console.log('Notification permission granted.');
+    return this.messaging.getToken();
+  }.bind(this))
+  .then(function(token) {
+    console.log(token);
+  })
+  .catch(function(err) {
+    console.log('Unable to get permission to notify.', err);
+  });
+
+  // Handle incoming messages.
+  this.messaging.onMessage(function(payload) {
+    console.log("Message received. ", payload);
+  });
 };
 
 // Loads chat messages history and listens for upcoming ones.
