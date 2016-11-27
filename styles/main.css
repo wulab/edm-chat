@@ -99,6 +99,9 @@ main, #messages-card {
   font-size: 12px;
   box-sizing: border-box;
 }
+.message-container .text {
+  padding-left: 40px;
+}
 #message-form {
   display: flex;
   flex-direction: row;
@@ -171,11 +174,9 @@ main, #messages-card {
 @media screen and (max-width: 610px) {
   header {
     height: 113px;
-    padding-bottom: 80px !important;
   }
   #user-container {
     top: 72px;
-    background-color: rgb(3,155,229);
     height: 38px;
     padding-top: 3px;
     padding-right: 2px;
@@ -185,6 +186,18 @@ main, #messages-card {
     width: 33px;
     height: 33px;
     background-size: 33px;
+  }
+  #user-container #user-name {
+    display: none;
+  }
+  .layout-container {
+    width: 90%;
+  }
+}
+
+@media screen and (min-width: 611px) {
+  .layout-container {
+    width: 70%;
   }
 }
 .mdl-textfield__label:after {
@@ -207,6 +220,8 @@ main, #messages-card {
   bottom: 0;
   left: 0;
   right: 0;
+  background-color: #FFF;
+  border-top: solid 1px rgb(216, 216, 216);
 }
 .mdl-tabs__tab-bar > a.mdl-tabs__tab {
   width: 33%;
@@ -232,6 +247,14 @@ main, #messages-card {
   max-width: 330px;
   max-height: 265px;
 }
+.gallery-item .name {
+  position: relative;
+  color: #bbb;
+  font-style: italic;
+  font-size: 12px;
+  box-sizing: border-box;
+  text-align: center;
+}
 .text-wrapper {
   position: relative;
   width: 330px;
@@ -253,10 +276,74 @@ main, #messages-card {
     opacity: 1;
     justify-content: flex-end;
     text-shadow: 1px 1px 1px #000;
-    margin-bottom: 1em;
+    margin-bottom: 3.5em;
+  }
+  .gallery-item .name {
+    top: -310px;
+    bottom: auto;
+  }
+}
+
+@media only screen and (min-width: 1025px) {
+  .gallery-item .name {
+    top: auto;
+    bottom: 30px;
   }
 }
 
 span.mdl-list__item-secondary-content > a {
   color: rgba(0,0,0,.54);
+}
+
+header.mdl-layout__header {
+  background-color: rgba(0,0,0,0.8);
+  border-color: #111;
+  height: 50px;
+  min-height: 50px;
+}
+
+header.mdl-layout__header #user-container {
+  top: 10px;
+}
+
+header.mdl-layout__header .mdl-cell {
+  padding-top: 1px;
+}
+
+#header-brand {
+  font-size: 18px;
+  color: #9d9d9d;
+  margin-top: 0;
+}
+
+.mdl-layout__header-row {
+  height: 40px;
+}
+
+.layout-container {
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+.event-container {
+  width: 91%;
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+#events-panel .title, #contacts-panel .title {
+  margin-top: 3rem;
+  font-size: 1.64rem;
+  line-height: 110%;
+  margin: .82rem 0 .656rem 0;
+  text-align: center;
+}
+
+#contacts-panel .address{
+  padding-left: 55px;
+}
+
+#contacts-panel .mdl-list__item--three-line .mdl-list__item-primary-content {
+  height: auto;
+  padding-top: 20px;
 }
